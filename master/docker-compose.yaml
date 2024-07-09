@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+
+  testdocker:
+    restart: always
+    build:
+      context: ./testdocker
+    depends_on:
+      - db
+    ports:
+      - "8025:8000"
+    image: testdocker
+    volumes:
+      - ./persistentdata/static:/var/www/static # <--here
+      - ./persistentdata/media:/var/www/media # <--here
+      - ./db:/app/src/db
+
+  db:
+    restart: always
+    image: postgres:15-alpine
+    ports:
+      - 5425:5432
+    volumes:
+      - ./persistentdata/db:/var/lib/postgresql/data
+    env_file:
+      - ./postgresql-db/.pg-env # why - see the next step
+
+
+
+
